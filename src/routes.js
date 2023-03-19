@@ -42,4 +42,22 @@ router.post('/usuarios', async (req, res) => {
     }
 })
 
+router.post('/clientes', async (req, res) => {
+    const { id, email, name, vendedorId } = req.body
+    try {
+        const cliente = await prisma.cliente.create({
+            data: {
+                id,
+                email,
+                name,
+                vendedorId
+            }
+        })
+        res.status(201).json(cliente)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: 'Erro ao criar cliente'})
+    }
+})
+
 module.exports = router
