@@ -1,6 +1,4 @@
 const { PrismaClient } = require('@prisma/client')
-const express = require('express')
-const { Request, Response} = require('express')
 
 const prisma = new PrismaClient()
 
@@ -54,6 +52,20 @@ class UsuarioService {
         }
     }
 
+    async deletarUsuario(req = Request, res = Response) {
+        const { id } = req.params
+        try {
+            const usuario = await prisma.usuario.delete({
+                where: {
+                    id: Number(id)
+                }
+            })
+            res.status(204).json({message: 'Usuário deletado com sucesso', usuario})
+        } catch(err){
+            console.log(err)
+            res.status(404).json({message: 'Não existe este usuário'})
+        }
+    }
     
 }
 
