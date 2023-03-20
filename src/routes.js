@@ -1,46 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const { PrismaClient } = require('@prisma/client')
+const UsuarioService = require('./services/UsuarioService')
 
 const prisma = new PrismaClient()
+const usuarioService = new UsuarioService(prisma)
 
-router.get('/usuarios', (req, res) => {
-    async function buscarTodosOsUsuario() {
-        const usuario = await prisma.usuario.findMany()
-        if(usuario.length > 0)
-            res.status(200).json(usuario)
-        else
-            res.status(404).json({message: 'Nenhum usuário encontrado'})
-    }
-    
-    buscarTodosOsUsuario()
-        .then(() => {
-        prisma.$disconnect()
-        })
-        .catch((err) => {
-        console.log(err)
-        prisma.$disconnect()
-        process.exit(1)
-        })
-})
+router.get('/usuarios', usuarioService.buscarTodosOsUsuarios)
 
-router.post('/usuarios', async (req, res) => {
-    const { id, email, name, password } = req.body
-    try {
-        const usuario = await prisma.usuario.create({
-            data: {
-                id,
-                email,
-                name,
-                password
-            }
-        })
-        res.status(201).json(usuario)
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({message: 'Erro ao criar usuário'})
-    }
-})
+router.post('/usuarios', usuarioService.criarUsuario)
 
 router.get('/usuarios/:id', async (req, res) => {
     const { id } = req.params
