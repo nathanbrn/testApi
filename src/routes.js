@@ -42,6 +42,14 @@ router.post('/usuarios', async (req, res) => {
     }
 })
 
+router.get('/clientes', async (req, res) => {
+    const cliente = await prisma.cliente.findMany()
+    if(cliente.length > 0)
+        res.status(200).json(cliente)
+    else
+        res.status(404).json({message: 'Nenhum cliente encontrado'})
+})
+
 router.post('/clientes', async (req, res) => {
     const { id, email, name, vendedorId } = req.body
     try {
