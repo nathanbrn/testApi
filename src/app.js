@@ -6,7 +6,11 @@ var cors = require('cors')
 
 const port = 3001
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    optionsSuccessStatus: 200
+}))
+
 app.use(express.json())
 app.use(express.urlencoded({
     extended: true

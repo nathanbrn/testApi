@@ -28,7 +28,7 @@ class ClienteService {
             res.status(201).json(cliente)
         } catch(err) {
             console.log(err)
-            res.status(500).json({message: 'Erro ao criar cliente'})
+            res.status(400).json({message: 'Erro ao criar cliente, todos os campos são obrigatórios'})
         }
     }
 
@@ -47,6 +47,27 @@ class ClienteService {
         }
     }
 
+    async atualizarCliente(req = Request, res = Response) {
+        const { id } = req.params
+        const { email, name, vendedorId } = req.body
+        try {
+            const cliente = await prisma.cliente.update({
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    email,
+                    name,
+                    vendedorId
+                }
+            })
+            res.status(201).json({message: "cliente atualizado com sucesso"},cliente)
+        } catch(err) {
+            console.log(err)
+            res.status(500).json({ message: 'Erro ao atualizar cliente'})
+        }
+    }
+
     async deletarCliente(req = Request, res = Response) {
         const { id } = req.params
         try {
@@ -55,7 +76,7 @@ class ClienteService {
                     id: Number(id)
                 }
             })
-            res.status(204).json({message: 'Cliente deletado com sucesso', cliente})
+            res.status(204).json({message: 'Cliente deletado com sucesso'}, cliente)
         } catch(err) {
             console.log(err)
             res.status(404).json({message: 'Não existe este cliente'})

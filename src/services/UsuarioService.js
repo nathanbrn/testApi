@@ -33,7 +33,7 @@ class UsuarioService {
             res.status(201).json(usuario)
         } catch(err) {
             console.log(err)
-            res.status(500).json({message: 'Erro ao criar usuário'})
+            res.status(400).json({message: 'Erro ao criar usuário, todos os campos são obrigatórios'})
         }
     }
 
@@ -52,6 +52,27 @@ class UsuarioService {
         }
     }
 
+    async atualizarUsuario(req = Request, res = Response) {
+        const { id } = req.params
+        const { email, name, password } = req.body
+        try {
+            const usuario = await prisma.usuario.update({
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    email,
+                    name,
+                    password
+                }
+            })
+            res.status(201).json(usuario)
+        } catch(err) {
+            console.log(err)
+            res.status(500).json({ message: 'Erro ao atualizar cliente' })
+        }
+    }
+
     async deletarUsuario(req = Request, res = Response) {
         const { id } = req.params
         try {
@@ -60,7 +81,7 @@ class UsuarioService {
                     id: Number(id)
                 }
             })
-            res.status(204).json({message: 'Usuário deletado com sucesso', usuario})
+            res.status(204).json({message: 'Usuário deletado com sucesso'}, usuario)
         } catch(err){
             console.log(err)
             res.status(404).json({message: 'Não existe este usuário'})
