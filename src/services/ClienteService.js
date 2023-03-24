@@ -82,6 +82,21 @@ class ClienteService {
             res.status(404).json({message: 'Não existe este cliente'})
         }
     }
+
+    async listarClientePorUsuario(req = Request, res = Response) {
+        const { id } = req.params
+        try {
+            const cliente = await prisma.cliente.findMany({
+                where: {
+                    vendedorId: Number(id)
+                }
+            })
+            res.status(200).json(cliente)
+        } catch(err) {
+            console.log(err)
+            res.status(404).json({message: 'Nenhum cliente encontrado'})
+        }
+    }
 }
 
 module.exports = ClienteService

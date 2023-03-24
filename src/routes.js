@@ -14,6 +14,8 @@ router.get('/usuarios/:id', usuarioService.buscarUsuarioPorId)
 
 router.get('/clientes/:id', clienteService.buscarClientePorId)
 
+router.get('/usuarios/:id/clientes', clienteService.listarClientePorUsuario)
+
 router.post('/usuarios', usuarioService.criarUsuario)
 
 router.post('/clientes', clienteService.criarCliente)
