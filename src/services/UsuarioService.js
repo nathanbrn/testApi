@@ -10,9 +10,9 @@ class UsuarioService {
         try {
             const usuario = await prisma.usuario.findMany()
             if(usuario.length > 0)
-                res.status(200).json(usuario)
-            else
-                res.status(404).json({message: 'Nenhum usuário encontrado'})
+                return res.status(200).json(usuario)
+                
+            return res.status(404).json({message: 'Nenhum usuário encontrado'})
         } catch(err) {
             console.log(err)
             res.status(500).json({message: 'Erro ao buscar usuários'})
@@ -33,7 +33,7 @@ class UsuarioService {
             res.status(201).json(usuario)
         } catch(err) {
             console.log(err)
-            res.status(400).json({message: 'Erro ao criar usuário, todos os campos são obrigatórios'})
+            res.status(500).json({message: 'Erro ao criar usuário'})
         }
     }
 
@@ -45,10 +45,14 @@ class UsuarioService {
                     id: Number(id)
                 }
             })
-            res.status(200).json(usuario)
+            if(usuario) {
+                return res.status(200).json(usuario)
+            }
+
+            return res.status(404).json({message: 'Nenhum usuário encontrado'})
         } catch(err) {
         console.log(err)
-        res.status(404).json({message: 'Nenhum usuário encontrado'})
+        res.status(500).json({message: 'Erro ao buscar usuário'})
         }
     }
 
@@ -66,7 +70,7 @@ class UsuarioService {
                     password
                 }
             })
-            res.status(201).json(usuario)
+            res.status(200).json(usuario)
         } catch(err) {
             console.log(err)
             res.status(500).json({ message: 'Erro ao atualizar cliente' })

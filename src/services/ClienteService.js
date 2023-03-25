@@ -9,7 +9,7 @@ class ClienteService {
     async buscarTodosOsClientes(req = Request, res = Response) {
         const cliente = await prisma.cliente.findMany()
         
-        if (cliente.length > 0) {
+        if(cliente.length > 0) {
             return res.status(200).json(cliente)
         }
             
@@ -30,7 +30,7 @@ class ClienteService {
             res.status(201).json(cliente)
         } catch(err) {
             console.log(err)
-            res.status(400).json({message: 'Erro ao criar cliente, todos os campos são obrigatórios'})
+            res.status(500).json({message: 'Erro ao criar cliente'})
         }
     }
 
@@ -42,10 +42,14 @@ class ClienteService {
                     id: Number(id)
                 }
             })
-            res.status(200).json(cliente)
+            if(cliente) {
+                return res.status(200).json(cliente)
+            }
+
+            return res.status(404).json({message: 'Nenhum cliente encontrado'})
         } catch(err) {
             console.log(err)
-            res.status(404).json({message: 'Nenhum cliente encontrado'})
+            res.status(500).json({message: 'Erro ao buscar cliente'})
         }
     }
 
@@ -63,7 +67,8 @@ class ClienteService {
                     vendedorId
                 }
             })
-            res.status(201).json({message: "cliente atualizado com sucesso"})
+
+            res.status(201).json({message: "cliente atualizado com sucesso", client: cliente})
         } catch(err) {
             console.log(err)
             res.status(500).json({ message: 'Erro ao atualizar cliente'})
@@ -79,7 +84,7 @@ class ClienteService {
                 }
             })
 
-            res.status(200).json({message: 'Cliente deletado com sucesso', client: cliente})
+            res.status(200).json({message: `Cliente ${cliente.name} deletado com sucesso`})
         } catch(err) {
             console.log(err)
             res.status(500).json({message: 'Erro ao deletar cliente'})
@@ -94,10 +99,14 @@ class ClienteService {
                     vendedorId: Number(id)
                 }
             })
-            res.status(200).json(cliente)
+            if(cliente.length > 0) {
+                return res.status(200).json(cliente)
+            }
+
+            return res.status(404).json({message: 'Nenhum cliente encontrado'})
         } catch(err) {
             console.log(err)
-            res.status(404).json({message: 'Nenhum cliente encontrado'})
+            res.status(500).json({message: 'Erro ao listar cliente por usuário'})
         }
     }
 }
