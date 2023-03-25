@@ -81,7 +81,7 @@ class UsuarioService {
                     id: Number(id)
                 }
             })
-            res.status(204).json({message: 'Usuário deletado com sucesso'}, usuario)
+            res.status(204).json({message: 'Usuário deletado com sucesso', user: usuario})
         } catch(err){
             console.log(err)
             res.status(404).json({message: 'Não existe este usuário'})

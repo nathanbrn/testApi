@@ -8,10 +8,12 @@ class ClienteService {
 
     async buscarTodosOsClientes(req = Request, res = Response) {
         const cliente = await prisma.cliente.findMany()
-        if(cliente.length > 0)
-            res.status(200).json(cliente)
-        else
-            res.status(404).json({message: 'Nenhum cliente encontrado'})
+        
+        if (cliente.length > 0) {
+            return res.status(200).json(cliente)
+        }
+            
+        return res.status(404).json({message: 'Nenhum cliente encontrado'})
     }
 
     async criarCliente(req = Request, res = Response) {
@@ -61,7 +63,7 @@ class ClienteService {
                     vendedorId
                 }
             })
-            res.status(201).json({message: "cliente atualizado com sucesso"},cliente)
+            res.status(201).json({message: "cliente atualizado com sucesso"})
         } catch(err) {
             console.log(err)
             res.status(500).json({ message: 'Erro ao atualizar cliente'})
@@ -76,10 +78,11 @@ class ClienteService {
                     id: Number(id)
                 }
             })
-            res.status(204).json({message: 'Cliente deletado com sucesso'}, cliente)
+
+            res.status(200).json({message: 'Cliente deletado com sucesso', client: cliente})
         } catch(err) {
             console.log(err)
-            res.status(404).json({message: 'Não existe este cliente'})
+            res.status(500).json({message: 'Erro ao deletar cliente'})
         }
     }
 
